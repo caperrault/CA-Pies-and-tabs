@@ -21,6 +21,9 @@ radio.on("click", function() {
   setFillProperty(this.value);
 });
 
+
+
+// pie charts
 d3.csv("blah.csv", function(err, data) {
   container.style("display", "none");
 })

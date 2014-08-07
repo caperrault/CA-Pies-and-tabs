@@ -66,21 +66,46 @@ opacity:0.8;}
 
 <h1> CPAD dataset: County Level </h1>
 
+<!--
+
 <form>
-  <label><input type="radio" name="dataset" value="Total Acreage" checked> Total Acreage</label>
-  <label><input type="radio" name="dataset" value="Normalized by County Acreage"> Normalized by County Acreage</label>
-  <label><input type="radio" name="dataset" value="Acres per Inhabitant"> Acres per Inhabitant</label>
+  <label><input type="Radio" name="dataset" id="ac_tot" class="radio" value="ac_tot" checked> Total Acreage</label>
+  <label><input type="Radio" name="dataset" id="ACR_NORM_1" class="radio" value="ACR_NORM_1"> Normalized by County Acreage</label>
+  <label><input type="Radio" name="dataset" id="POP_NORM" class="radio" value="POP_NORM"> Acres per Inhabitant</label>
 </form>
+
+-->
+
+<input type="Radio" name="map" id='ac_tot' class ='radio' value="ac_tot"  checked="checked" />  Total Acreage
+<input type="Radio" name="map" id='ACR_NORM_1'  class ='radio' value="ACR_NORM_1" /> Normalized by County Acreage
+<input type="Radio" name="map" id='POP_NORM'  class ='radio' value="POP_NORM" /> Acres per Inhabitant
+
 
 <svg class="ca"
 style="width: 1000px; height: 500px;">
 
 <script>
+
+  var fillProperty = "ac_tot"
+
   d3.json("caFields9.json", function(err, ca) {
 
   var div = d3.select("body").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
+
+	var radio = d3.select(".ca")
+						  .append("input")
+						  .attr("type","Radio")
+						  .attr('id',"peter")
+						  .attr("value","acr");
+
+  var svg = d3.select(".ca");
+
+  var group = svg.selectAll('g')
+					.data(topojson.feature(ca, ca.objects.counties2).features)
+					.enter()
+					.append('g');
 
   var quantize = d3.scale.quantize()
     .domain([0, 14000000])
@@ -94,13 +119,33 @@ style="width: 1000px; height: 500px;">
 
   var path = d3.geo.path().projection(projection);
 
-  var svg = d3.select(".ca");
+  var counties = group.append('path')
+						.attr('d',path)
+						.attr('fill','steelblue')
+						.attr('stroke', 'white')
+						.attr('stroke-width', '1px')
+						.attr('opacity','0.8');
 
-  svg.selectAll(".counties2")
+  /*function updateFill(selection) {
+    selection.attr("fill", function(d) {
+      return quantize(d.properties[fillProperty]);
+    });
+  }
+
+  function setFillProperty(property) {
+    fillProperty = property;
+    svg.selectAll("counties2").call(updateFill);
+  }
+
+  d3.selectAll('.radio').on("change", function() {
+    setFillProperty(this.value);
+  }); */
+
+  /*svg.selectAll(".counties2")
     .data(topojson.feature(ca, ca.objects.counties2).features)
     .enter().append("path")
     .attr("class", function(d) { return "counties2 " + d.id; })
-    .style("fill", function (d) {return quantize(d.properties.ac_tot);})
+    //.style("fill", function (d) {return quantize(d.properties.ac_tot);})
     .classed("geo", true)
     .attr("d", path)
     .on("click", function(d) {
@@ -113,9 +158,28 @@ style="width: 1000px; height: 500px;">
     .style("top", (d3.event.pageY -30) + "px");
     updatePie1(d.properties.name);
     updatePie2(d.properties.name);
-  })
+  });
+*/
+		    d3.selectAll(".radio").on("change", function(){
 
-})
+				if (document.getElementById("ac_tot").checked) {
+								counties.transition().duration(250)
+								     .style("fill", "green");
+                     }
+
+				else if (document.getElementById("ACR_NORM_1").checked) {
+								counties.transition().duration(250)
+								     .style("fill", "red");
+                     }
+
+				else if (document.getElementById("POP_NORM").checked) {
+								counties.transition().duration(250)
+								     .style("fill", "blue");
+                     }
+			});
+
+
+});
 
 var updatePie1;
 var updatePie2;
