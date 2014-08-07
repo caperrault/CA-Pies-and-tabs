@@ -78,9 +78,7 @@ style="width: 1000px; height: 500px;">
 
 <script>
 
-  var fillProperty = "ac_tot"
-
-  d3.json("caFields9.json", function(err, ca) {
+d3.json("caFields9.json", function(err, ca) {
 
   var div = d3.select("body").append("div")
   .attr("class", "tooltip")
@@ -89,8 +87,6 @@ style="width: 1000px; height: 500px;">
 	var radio = d3.select(".ca")
 						  .append("input")
 						  .attr("type","Radio")
-						  .attr('id',"peter")
-						  .attr("value","acr");
 
   var svg = d3.select(".ca");
 
@@ -99,17 +95,32 @@ style="width: 1000px; height: 500px;">
 					.enter()
 					.append('g')
 
-  var quantizeTOT = d3.scale.quantize()
-    .domain([0, 14000000])
-    .range(['rgb(255,245,0)','rgb(170,211,0)','rgb(65,171,93)','rgb(35,132,67)','rgb(0,104,55)','rgb(0,69,41)']);
+  /* var MinTOT = d3.min(ca, function (d) {
+                return d3.min(d.objects, function (e) {
+                  return d3.min(e.counties2, function (f) {
+                    return d3.min(f.properties, function (g) {
+                      return d3.min(g.ac_tot, function (h) {
+                        return d3.min(h);
+                      });
+                    });
+                  });
+                });
+              }) */
 
-  var quantizeACR = d3.scale.quantize()
-    .domain([0, 1])
-    .range(['rgb(255,245,0)','rgb(170,211,0)','rgb(65,171,93)','rgb(35,132,67)','rgb(0,104,55)','rgb(0,69,41)']);
+  var colorTOT = d3.scale.linear()
+    .domain([30237, 993455, 12867928])
+    .range(['rgb(255,245,96)','rgb(215,211,0)','rgb(35,132,67)'])
+    .interpolate(d3.interpolateRgb);
 
-  var quantizePOP = d3.scale.quantize()
-    .domain([0, 400])
-    .range(['rgb(255,245,0)','rgb(170,211,0)','rgb(65,171,93)','rgb(35,132,67)','rgb(0,104,55)','rgb(0,69,41)']);
+  var colorACR = d3.scale.linear()
+    .domain([0.01, 0.3228, 0.95])
+    .range(['rgb(255,245,96)','rgb(205,211,0)','rgb(35,132,67)'])
+    .interpolate(d3.interpolateRgb);
+
+  var colorPOP = d3.scale.linear()
+    .domain([0.01, 2.08, 368])
+    .range(['rgb(255,245,96)','rgb(205,211,0)','rgb(35,132,67)'])
+    .interpolate(d3.interpolateRgb);
 
 
   var projection = d3.geo.albers()
@@ -124,17 +135,17 @@ style="width: 1000px; height: 500px;">
 
   if (document.getElementById("ac_tot").checked) {
           counties.transition().duration(250)
-               .style("fill", function (d) {return quantizeTOT(d.properties.ac_tot);});
+               .style("fill", function (d) {return colorTOT(d.properties.ac_tot);});
                }
 
   else if (document.getElementById("ACR_NORM_1").checked) {
           counties.transition().duration(250)
-               .style("fill", function (d) {return quantizeACR(d.properties.ACR_NORM_1);});
+               .style("fill", function (d) {return colorACR(d.properties.ACR_NORM_1);});
                }
 
   else if (document.getElementById("POP_NORM").checked) {
           counties.transition().duration(250)
-               .style("fill", function (d) {return quantizePOP(d.properties.POP_NORM);});
+               .style("fill", function (d) {return colorPOP(d.properties.POP_NORM);});
                }
 });
 
