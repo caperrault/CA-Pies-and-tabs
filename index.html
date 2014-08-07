@@ -131,21 +131,70 @@ d3.json("caFields9.json", function(err, ca) {
 
   var path = d3.geo.path().projection(projection);
 
+  var LegendW = 30,
+      LegendH = 80;
+
+  var svg = d3.select("body").append("svg:svg")
+      .attr("width", LegendW)
+      .attr("height", LegendH)
+      .style("display", "none");
+
+  var gradient = svg.append("svg:defs")
+    .append("svg:linearGradient")
+      .attr("id", "gradient")
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "0%")
+      .attr("y2", "100%")
+      .attr("spreadMethod", "pad");
+
+  gradient.append("svg:stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "rgb(35,132,67)")
+      .attr("stop-opacity", 1);
+
+  gradient.append("svg:stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "rgb(255,245,96)")
+      .attr("stop-opacity", 1);
+
+  svg.append("svg:rect")
+      .attr("width", LegendW)
+      .attr("height", LegendH)
+      .style("fill", "url(#gradient)");
+
+  svg.append("text")
+      .attr("text-anchor", "middle")
+      .attr("x","50%")
+      .attr("y","15%")
+      .attr("dy",0)
+      .text("+");
+
+  svg.append("text")
+      .attr("text-anchor", "middle")
+      .attr("x","50%")
+      .attr("y","90%")
+      .attr("dy",0)
+      .text("-");
+
   d3.selectAll(".radio").on("change", function(){
 
   if (document.getElementById("ac_tot").checked) {
           counties.transition().duration(250)
                .style("fill", function (d) {return colorTOT(d.properties.ac_tot);});
+          svg.transition().duration(250).style("display", null);
                }
 
   else if (document.getElementById("ACR_NORM_1").checked) {
           counties.transition().duration(250)
                .style("fill", function (d) {return colorACR(d.properties.ACR_NORM_1);});
+          svg.transition().duration(250).style("display", null);
                }
 
   else if (document.getElementById("POP_NORM").checked) {
           counties.transition().duration(250)
                .style("fill", function (d) {return colorPOP(d.properties.POP_NORM);});
+          svg.transition().duration(250).style("display", null);
                }
 });
 
