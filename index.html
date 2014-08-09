@@ -15,6 +15,10 @@
   fill-opacity: 1;
 }
 
+.previousCountyName {
+  background: white;
+  }
+
 div.tooltip {
   position: absolute;
   text-align: center;
@@ -107,7 +111,6 @@ d3.json("caFields9.json", function(err, ca) {
     .range(['rgb(255,245,96)','rgb(205,211,0)','rgb(35,132,67)'])
     .interpolate(d3.interpolateRgb);
 
-
   var projection = d3.geo.albers()
       .translate([480, 250])
       .scale(2700)
@@ -197,7 +200,7 @@ d3.json("caFields9.json", function(err, ca) {
             .on("mouseout", function (d) { div.transition().duration(300).style("opacity", 0);})
             .on("click", function(d) {
             d3.select(".selected").classed("selected", false);
-            d3.select(this).classed("selected", true).transition().duration(300)
+            d3.select(this).classed("selected", true).transition().duration(300);
             updatePie1(d.properties.name);
             updatePie2(d.properties.name);
             updateCountyName(d.properties.name);
@@ -351,12 +354,14 @@ d3.csv("Agency_lev_allcounties.csv", function (dataset) {
                 );
 
           var countyNameSvg = d3.select("body").append("svg")
-                                              .attr("width", 600)
-                                              .attr("height", 50)
-                                            //  .style("display", "none");
+                                               .attr("width", 600)
+                                               .attr("height", 50)
+                                               .style("display", "none");
 
-
-              countyNameSvg.append("text");
+    /*      var countyNameRect = d3.select("body").append("svg")
+                                               .attr("width", 600)
+                                               .attr("height", 50)
+                                               .style("display", "none");*/
 
                d3.selectAll("select")
                  .on("change.2", change);
@@ -366,22 +371,27 @@ d3.csv("Agency_lev_allcounties.csv", function (dataset) {
                 setCountyValue(this.properties.name);
               };
 
-              function setValue (value) {
+              function setValue(value) {
                 path.style("display", null);
                 legend.style("display", null);
                 pie2.value(function(d) { return d[value]; });
                 path = path.data(pie2);
                 path.transition().duration(750).attrTween("d", arcTween);
-              }
+              };
 
-              function setCountyValue (name) {
+              function setCountyValue(name) {
+            /*    countyNameRect.style("display", null)
+                              .append('rect')
+                              .attr("width", 600)
+                              .attr("height", 50)
+                              .style('fill', 'red') */
                 countyNameSvg.style("display", null)
                               .append("text")
                               .attr("text-anchor", "left")
                               .attr("x","0%")
                               .attr("y","50%")
-                             .text(function(d) { return name+" County" });
-              }
+                              .text(function(d) { return name+" County" });
+              };
 
               updatePie2 = setValue;
               updateCountyName = setCountyValue;
@@ -396,6 +406,18 @@ d3.csv("Agency_lev_allcounties.csv", function (dataset) {
 
                });
 
+/* var countyName = d3.select("text");
+
+var countyNameRect = countyName.node().getBBox();
+
+var padding = 2;
+
+var countyNameSvg = self.countyNameRect.insert("rect", "text")
+                        .attr("x", countyNameRect.x - padding)
+                        .attr("y", countyNameRect.y - padding)
+                        .attr("width", countyNameRect.width + (padding*2))
+                        .attr("height", countyNameRect.height + (padding*2))
+                        .style("fill", "red"); */
 
   </script>
 
