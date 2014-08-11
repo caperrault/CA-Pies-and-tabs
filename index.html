@@ -353,18 +353,12 @@ d3.csv("Agency_lev_allcounties.csv", function (dataset) {
                 .text( function (d, i) { return dataset[i].Agency_lev;}
                 );
 
-          var countyNameSvg = d3.select("body").append("svg")
+                var countyNameSvg = d3.select("body").append("svg")
                                                .attr("width", 600)
                                                .attr("height", 50)
                                                .style("display", "none");
 
-    /*      var countyNameRect = d3.select("body").append("svg")
-                                               .attr("width", 600)
-                                               .attr("height", 50)
-                                               .style("display", "none");*/
-
-               d3.selectAll("select")
-                 .on("change.2", change);
+               d3.selectAll("select").on("change.2", change);
 
               function change() {
                 setValue(this.value);
@@ -380,17 +374,17 @@ d3.csv("Agency_lev_allcounties.csv", function (dataset) {
               };
 
               function setCountyValue(name) {
-            /*    countyNameRect.style("display", null)
+                countyNameRect = countyNameSvg.style("display", null)
                               .append('rect')
                               .attr("width", 600)
                               .attr("height", 50)
-                              .style('fill', 'red') */
-                countyNameSvg.style("display", null)
+                              .style('fill', "white");
+                countyName = countyNameSvg.style("display", null)
                               .append("text")
                               .attr("text-anchor", "left")
                               .attr("x","0%")
                               .attr("y","50%")
-                              .text(function(d) { return name+" County" });
+                              .text(function() { return name+" County" });
               };
 
               updatePie2 = setValue;
@@ -406,18 +400,6 @@ d3.csv("Agency_lev_allcounties.csv", function (dataset) {
 
                });
 
-/* var countyName = d3.select("text");
-
-var countyNameRect = countyName.node().getBBox();
-
-var padding = 2;
-
-var countyNameSvg = self.countyNameRect.insert("rect", "text")
-                        .attr("x", countyNameRect.x - padding)
-                        .attr("y", countyNameRect.y - padding)
-                        .attr("width", countyNameRect.width + (padding*2))
-                        .attr("height", countyNameRect.height + (padding*2))
-                        .style("fill", "red"); */
 
   </script>
 
